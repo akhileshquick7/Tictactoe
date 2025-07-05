@@ -1,50 +1,43 @@
-def print_board(board):
-  for row in board:
-      print(" | ".join(row))
-      print("-" * 9)
+import tkinter as tk
+from tkinter import messagebox
 
-def check_winner(board, player):
-  for row in board:
-      if all(cell == player for cell in row):
-          return True
+root = tk.Tk()
+root.title("O-X Game - Akhilesh")
 
-  for col in range(3):
-      if all(board[row][col] == player for row in range(3)):
-          return True
+current_player = "X"
+board = [""] * 9
 
-  if all(board[i][i] == player for i in range(3)) or all(board[i][2 - i] == player for i in range(3)):
-      return True
+def check_winner():
+    win_combos = [
+        (0,1,2), (3,4,5), (6,7,8),  # rows
+        (0,3,6), (1,4,7), (2,5,8),  # columns
+        (0,4,8), (2,4,6)            # diagonals
+    ]
+    for i,j,k in win_combos:
+        if board[i] == board[j] == board[k] != "":
+            return True
+    return False
 
-  return False
+def click(index):
+    global current_player
+    if board[index] == "":
+        board[index] = current_player
+        buttons[index]["text"] = current_player
+        if check_winner():
+            messagebox.showinfo("Game Over", f"Player {current_player} wins!")
+            root.quit()
+        elif "" not in board:
+            messagebox.showinfo("Game Over", "It's a draw!")
+            root.quit()
+        else:
+            current_player = "O" if current_player == "X" else "X"
 
-def tic_tac_toe():
-  board = [[" " for _ in range(3)] for _ in range(3)]
-  player = "X"
+buttons = []
+for i in range(9):
+    btn = tk.Button(root, text="", width=8, height=3, font=("Arial", 24),
+                    command=lambda i=i: click(i))
+    btn.grid(row=i//3, column=i%3)
+    buttons.append(btn)
 
-  for _ in range(9):
-      print_board(board)
-      while True:
-          try:
-              row = int(input(f"Player {player}, enter row number (0-2): "))
-              col = int(input(f"Player {player}, enter column number (0-2): "))
-              if 0 <= row < 3 and 0 <= col < 3 and board[row][col] == " ":
-                  break
-              else:
-                  print("Invalid input or cell already taken. Try again.")
-          except ValueError:
-              print("Invalid input. Please enter numbers (0-2) for row and column.")
+root.mainloop()
 
-      board[row][col] = player
-
-      if check_winner(board, player):
-          print_board(board)
-          print(f"Player {player} wins!")
-          break
-
-      player = "O" if player == "X" else "X"
-  else:
-      print_board(board)
-      print("It's a tie!")
-
-if __name__ == "__main__":
-  tic_tac_toe()
