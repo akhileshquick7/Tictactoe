@@ -1,5 +1,7 @@
 🔗 Live Demo: [Play on Replit](https://replit.com/@akhileshquick7/TicTacToe)
 
+Steps to Play - Click the Above Link
+Press>> Run> PLAY
 
 # ❌⭕ O-X Game (Tic Tac Toe) — Python CLI 🎮
 
